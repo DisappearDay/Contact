@@ -12,11 +12,13 @@
 // 
 //
 
+
+//菜单栏
 void menu(void) {
 	printf("************************************\n");
 	printf("****** 1. add        2. del    *****\n");
 	printf("****** 3. search     4. modify *****\n");
-	printf("****** 5. show       6. print  *****\n");
+	printf("****** 5. show       6. sort   *****\n");
 	printf("****** 0. exit                 *****\n");
 	printf("************************************\n");
 }
@@ -24,6 +26,7 @@ void menu(void) {
 int main() {
 	int input = 0;
 	struct Contact con;
+	//初始化通讯录
 	init_contact(&con);
 
 	do
@@ -33,20 +36,30 @@ int main() {
 		scanf("%d", &input);
 		switch (input)
 		{
-		case 1:
-			Add_Contract(&con);
+		case Add:
+			//增加一个用户信息到通讯录
+			Add_Contact(&con);
 			break;
-		case 2:
+		case Del: 
+			//删除一个用户信息
+			Del_Contact(&con);
 			break;
-		case 3:
+		case Search:
+			//查询一个用户信息
+			Search_Contact(&con);
 			break;
-		case 4:
+		case Modify:
+			//修改一个用户信息
+			Modify_Contact(&con);
 			break;
-		case 5:
+		case Show:
+			//显示通迅息的信息
 			Show_Contact(&con);
-		case 6:
 			break;
-		case 0:
+		case Sort:
+			Sort_Contact(&con);
+			break;
+		case Exit:
 			break;
 		default:
 			printf("输入错误，请输入正确的值");
@@ -57,4 +70,4 @@ int main() {
 
 
 	return 0;
-}
+} 
