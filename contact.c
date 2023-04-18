@@ -2,18 +2,34 @@
 #include "contact.h"
 
 
+static int FindByName(const struct Contact* str,char name[NAME_MAX]) 
+{
+	int i = 0;
+	for (i=0;i<str->size;i++) 
+	{
+		if ((strcmp(str->data[i].name, name)) == 0) 
+		{
+			return i;
+		}
+	}
+	return -1;
+}
+
+
+//初始化通讯录
 void init_contact(struct Contact* str) {
 	memset(str->data, 0, sizeof(str->data));
 	str->size = 0;
 }
 
-void Add_Contract(struct Contact* str) {
-	
-	if (str->size == 1000) 
+//添加一个用户信息到通讯录
+void Add_Contact(struct Contact* str) {
+
+	if (str->size == 1000)
 	{
 		printf("该通讯录已满，不能再录入信息");
 	}
-	else 
+	else
 	{
 		printf("请输入 姓名:");
 		scanf("%s", str->data[str->size].name);
@@ -28,30 +44,113 @@ void Add_Contract(struct Contact* str) {
 		str->size++;
 		printf("添加成功\n");
 	}
-	
+
 }
 
-
-void Show_Contact(struct Contact* str) 
+//展示通讯录的所有信息
+void Show_Contact(struct Contact* str)
 {
 	int i = 0;
-	if (str->size == 0) 
+	if (str->size == 0)
 	{
 		printf("该通讯录为空！\n");
 	}
-	else 
+	else
 	{
 		printf("%-20s\t%-4s\t%-5s\t%-12s\t%-20s\t\n", "姓名", "年龄", "性别", "电话", "住址");
 		for (i = 0; i < str->size; i++)
 		{
 			printf("%-20s\t%-4d\t%-5s\t%-12s\t%-20s\t\n",
-				(str->data)[i].name, 
-				(str->data)[i].age, 
-				(str->data)[i].sex, 
-				(str->data)[i].tele, 
+				(str->data)[i].name,
+				(str->data)[i].age,
+				(str->data)[i].sex,
+				(str->data)[i].tele,
 				(str->data)[i].adress);
 		}
 	}
-	
-	
+}
+
+
+void Del_Contact(struct Contact* str) {
+	char name[NAME_MAX];
+	printf("请输入要删除的名字:>");
+	scanf("%s",name);
+	//如果找到了，返回该名字的下标
+	//如果没找到，返回-1
+    int res=FindByName(str,name);
+	if (res==-1) 
+	{
+		printf("该通讯录没有改名字");
+	}
+	else
+	{
+		int i = 0; 
+		for(i=res;i<str->size-1;i++)
+		{
+			str->data[res] = str->data[res + 1];
+		}
+		str->size--;
+		printf("删除成功\n");
+	}
+}
+
+void Search_Contact(const struct Contact* str) 
+{
+	char name[NAME_MAX];
+	printf("请输入要查询的用户信息:>");
+	scanf("%s",&name);
+	int sor=FindByName(str, name);
+	if (sor == -1) {
+		printf("该通讯录没有该用户的信息");
+	}
+	else
+	{
+		printf("%-20s\t%-4s\t%-5s\t%-12s\t%-20s\t\n", "姓名", "年龄", "性别", "电话", "住址");
+			printf("%-20s\t%-4d\t%-5s\t%-12s\t%-20s\t\n",
+				(str->data)[sor].name,
+				(str->data)[sor].age,
+				(str->data)[sor].sex,
+				(str->data)[sor].tele,
+				(str->data)[sor].adress);
+	}
+}
+
+void Modify_Contact(struct Contact* str)
+{
+	char name[NAME_MAX];
+	printf("请输入要查询的用户信息:>");
+	scanf("%s", &name);
+	int sor = FindByName(str, name);
+	if (sor == -1) 
+	{
+		printf("该通讯录没有该用户的信息");
+	}
+	else
+	{
+		printf("请输入 姓名:");
+		scanf("%s", str->data[sor].name);
+		printf("请输入 年龄:");
+		scanf("%d", &(str->data[sor].age));
+		printf("请输入 性别:");
+		scanf("%s", str->data[sor].sex);
+		printf("请输入 电话:");
+		scanf("%s", str->data[sor].tele);
+		printf("请输入 住址:");
+		scanf("%s", str->data[sor].adress);
+		
+		printf("修改成功\n");
+	}
+}
+
+int s_name(const void* str1,const void* str2) 
+{
+	//return strcmp(((struct Contact*)str1)->data->name, ((struct Contact*)str2)->data->name);
+	return strcmp((struct peoInfo*)(((struct Contact*)str1)->data)->name, (struct peoInfo*)(((struct Contact*)str2)->data)->name);
+}
+
+void Sort_Contact(const struct Contact* str)
+{
+	int sz = sizeof(str->data) / sizeof(str->data[0]);
+	qsort(str->data,sz, sizeof(str->data[0]), s_name);
+	printf("排序成功\n");
 }
